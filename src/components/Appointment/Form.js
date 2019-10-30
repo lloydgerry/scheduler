@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import InterviewerList from "components/InterviewersList";
-
 import Button from "components/Button";
 
 export default function Form(props) {
@@ -25,7 +24,7 @@ export default function Form(props) {
         <form autoComplete="off">
           <input
             className="appointment__create-input text--semi-bold"
-            name="name"
+            name={name}
             type="text"
             placeholder="Enter Student Name"
             /*
