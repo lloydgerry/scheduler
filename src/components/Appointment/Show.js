@@ -14,20 +14,18 @@ export default function Empty(props) {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <li onClick={() => props.onEdit()}>
           <img
+            onClick={() => props.onEdit()}
             className="appointment__actions-button"
             src="images/edit.png"
             alt="Edit"
           />
-          </li>
-          <li onClick={() => props.onDelete()}>
           <img
+            onClick={() => props.onDelete()}
             className="appointment__actions-button"
             src="images/trash.png"
             alt="Delete"
           />
-          </li>
         </section>
       </section>
     </main>
