@@ -5,6 +5,7 @@ import "components/Application.scss";
 import "components/Appointment"
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
+import useVisualMode from "hooks/useVisualMode"
 import getAppointmentsForDay, { getInterviewer } from "Helpers/selectors"
 import { tsPropertySignature } from "@babel/types";
 
