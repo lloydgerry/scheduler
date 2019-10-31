@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React from "react";
 
 import "./styles.scss";
 
@@ -8,9 +8,6 @@ import Show from "components/Appointment/Show";
 
 
 export default function Appointment(props) {
-
-
-  console.log("props", props)
   return (
       <article className="appointment">
       <Header time={props.time} />
