@@ -26,7 +26,6 @@ useEffect(() => {
     axios.get("http://localhost:8001/api/appointments"),
     axios.get("http://localhost:8001/api/interviewers")
   ]).then((all) => {
-    console.log("all array: ", all)
 
     setState(prev => ({
       ...prev, 
@@ -43,7 +42,6 @@ const setDay = day => setState({ ...state, day });
 const appointments =  getAppointmentsForDay(state, state.day);
 
 const appointmentsList = appointments.map(appointment => {
-  console.log("appointment in Appointment List: ", appointment)
   const interview = getInterviewer(state, appointment.interview)
 
   return (
