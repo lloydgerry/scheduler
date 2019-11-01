@@ -26,6 +26,7 @@ export default function Appointment(props) {
   const onEdit = () => {transition(EDIT)}
   const onCancel = () => {back()}
   const save = (name, interviewer) => {
+    console.log("intereviewer.id", interviewer)
       const interview = {
         "student": name,
         "interviewer": interviewer.id 
@@ -46,7 +47,7 @@ export default function Appointment(props) {
           transition(ERROR_SAVE)
           )
   }
-
+  console.log("props", props)
   return (
       <article className="appointment">
       <Header time={props.time} />
@@ -71,7 +72,7 @@ export default function Appointment(props) {
         {mode === EDIT && (
           <Form
           interviewers={props.interviewers}
-          interviewer={props.interview.interviewer}
+          interviewer={props.interview.interviewer.id}
           name={props.interview.student}
           onCancel={onCancel}
           onSave={save}
