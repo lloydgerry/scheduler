@@ -26,11 +26,11 @@ export default function Appointment(props) {
   const onEdit = () => {transition(EDIT)}
   const onCancel = () => {back()}
   const save = (name, interviewer) => {
-    console.log("intereviewer.id", interviewer)
       const interview = {
         "student": name,
-        "interviewer": interviewer.id 
+        "interviewer": interviewer
       };
+
       transition("SAVING");
       props.bookInterview(props.id, interview)
         .then(() => transition(SHOW))
@@ -47,7 +47,6 @@ export default function Appointment(props) {
           transition(ERROR_SAVE)
           )
   }
-  console.log("props", props)
   return (
       <article className="appointment">
       <Header time={props.time} />
