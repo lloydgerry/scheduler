@@ -7,11 +7,10 @@ import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 import useVisualMode from "hooks/useVisualMode"
 import getAppointmentsForDay, { getInterviewer, getInterviewersForDay } from "Helpers/selectors"
-import { tsPropertySignature } from "@babel/types";
 
 
 
-
+//Master Component
 
 export default function Application(props) {
   const [state, setState] = useState({
@@ -21,6 +20,7 @@ export default function Application(props) {
     interviewers: {}
   });
 
+  //Collect API Info
 useEffect(() => {
   Promise.all([
     axios.get("http://localhost:8001/api/days"),
@@ -39,12 +39,38 @@ useEffect(() => {
 
   }, [])
 
+  // Set Constants using API Info and other App Functions
+
 const setDay = day => setState({ ...state, day });
 const appointments =  getAppointmentsForDay(state, state.day);
 const interviewers = getInterviewersForDay(state, state.day);
 
+//Interview Handlers ==========
+//Book Interview
+const bookInterview = (id, interview) => {
+  const appointment = {
+  ...state.appointments[id],
+  interview: { ...interview }
+  };
+  const appointments = {
+    ...state.appointments,
+    [id]: appointment
+  };
+  
+  
+  console.log("book interview: ", id, interview);
+  return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
+  setState({
+    ...state,
+    appointments
+  })
+  ).catch(error => console.log("DB Write Error: ", error))
+}
+//Cancel Interview
+
+// Schedule
 const appointmentsList = appointments.map(appointment => {
-const interview = getInterviewer(state, appointment.interview)
+  const interview = getInterviewer(state, appointment.interview)
 
   return (
     <Appointment
@@ -53,9 +79,16 @@ const interview = getInterviewer(state, appointment.interview)
     id={appointment.id}
     time={appointment.time}
     interview={interview}
+    interviewers={interviewers}
+    bookInterview={bookInterview}
     />
     );
 });
+// End Schedule
+
+
+
+
 
   return (
     <main className="layout">
