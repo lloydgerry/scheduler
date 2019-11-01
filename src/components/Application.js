@@ -60,18 +60,37 @@ const bookInterview = (id, interview) => {
   
   console.log("book interview: ", id, interview);
   return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
-  setState({
-    ...state,
-    appointments
-  })
-  ).catch(error => console.log("DB Write Error: ", error))
+    setState({
+      ...state,
+      appointments
+  }))
+  .catch(error => console.log("DB Write Error on Book Interview: ", error))
 }
 //Cancel Interview
+
+const cancelInterview =(id) => {
+  const appointment = {
+    ...state.appointments[id],
+    interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    console.log("CancelInterview hit, id is: ", id)
+    return axios.delete(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
+      setState({
+        ...state,
+        appointments
+    }))
+    .catch(error => console.log("DB Write Error on Cancel Interview: ", error))
+}
 
 // Schedule
 const appointmentsList = appointments.map(appointment => {
   const interview = getInterviewer(state, appointment.interview)
-
+  console.log("made it into appointments list, interviewers: ", interviewers)
   return (
     <Appointment
     {...appointment}
@@ -81,13 +100,11 @@ const appointmentsList = appointments.map(appointment => {
     interview={interview}
     interviewers={interviewers}
     bookInterview={bookInterview}
+    cancelInterview={cancelInterview}
     />
     );
 });
 // End Schedule
-
-
-
 
 
   return (

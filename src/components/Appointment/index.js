@@ -15,24 +15,37 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
-  const onAdd = () => {transition("CREATE")}
+  const onAdd = () => {transition(CREATE)}
+  const onEdit = () => {transition(EDIT)}
   const onCancel = () => {back()}
   const save = (name, interviewer) => {
-    console.log("form save outputs:", name, interviewer)
       const interview = {
         "student": name,
-        "interviewer": interviewer 
+        "interviewer": interviewer.id 
       };
       transition("SAVING");
-      props.bookInterview(props.id, interview).then(() => transition("SHOW"))
+      props.bookInterview(props.id, interview)
+        .then(() => transition(SHOW))
+        .catch(error => console.log("error in promise of save: ", error))
     }
 
-  console.log("appointment index props: ", props)
+
+  const onDelete = () => {
+    transition(SAVING)
+    props.cancelInterview(props.id)
+      .then(() => transition(EMPTY))
+      .catch(error => 
+          console.log("error in promise of onDelete: ", error),
+          transition(ERROR_SAVE)
+          )
+  }
 
   return (
       <article className="appointment">
@@ -43,11 +56,23 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          
         />
         )}
         {mode === CREATE && (
           <Form 
           interviewers={props.interviewers}
+          onCancel={onCancel}
+          onSave={save}
+          />
+        )}
+        {mode === EDIT && (
+          <Form
+          interviewers={props.interviewers}
+          interviewer={props.interview.interviewer}
+          name={props.interview.student}
           onCancel={onCancel}
           onSave={save}
           />
