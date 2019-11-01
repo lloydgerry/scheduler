@@ -6,7 +6,7 @@ import "components/Appointment"
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 import useVisualMode from "hooks/useVisualMode"
-import getAppointmentsForDay, { getInterviewer } from "Helpers/selectors"
+import getAppointmentsForDay, { getInterviewer, getInterviewersForDay } from "Helpers/selectors"
 import { tsPropertySignature } from "@babel/types";
 
 
@@ -41,9 +41,10 @@ useEffect(() => {
 
 const setDay = day => setState({ ...state, day });
 const appointments =  getAppointmentsForDay(state, state.day);
+const interviewers = getInterviewersForDay(state, state.day);
 
 const appointmentsList = appointments.map(appointment => {
-  const interview = getInterviewer(state, appointment.interview)
+const interview = getInterviewer(state, appointment.interview)
 
   return (
     <Appointment
