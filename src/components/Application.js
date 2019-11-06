@@ -2,7 +2,7 @@ import React from "react";
 
 
 import "components/Application.scss";
-import "components/Appointment"
+import "components/Appointment";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 import useApplicationData from "hooks/useApplicationData";
@@ -19,7 +19,6 @@ export default function Application(props) {
     setDay,
     bookInterview,
     cancelInterview,
-    setSpots
   } = useApplicationData();
 
   // Set Constants for Lists
