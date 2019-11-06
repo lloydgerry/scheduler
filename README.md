@@ -1,5 +1,7 @@
 # Interview Scheduler
 
+Using the latest React tools and techniques we built an application that allows users to book and cancel interviews.
+
 ## Setup
 
 Install dependencies with `npm install`.
