@@ -35,7 +35,7 @@ export default function useApplicationData() {
   });
 
   //SetDay
-  const setDay = day => setDay({ ...state, day });
+  const setDay = day => setState({ ...state, day });
 
   //Collect API Info
   useEffect(() => {
@@ -69,11 +69,14 @@ export default function useApplicationData() {
     };
     
     console.log("book interview: ", id, interview);
-    return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
+    return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => {
+      setSpots(id, -1)
+
       setState({
         ...state,
         appointments
-    }))
+      })
+    })
     .catch(error => console.log("DB Write Error on Book Interview: ", error))
   }
   //Cancel Interview
@@ -89,12 +92,31 @@ export default function useApplicationData() {
       };
 
       console.log("CancelInterview hit, id is: ", id)
-      return axios.delete(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
+      return axios.delete(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => {
+        setSpots(id, +1)
+
         setState({
           ...state,
           appointments
-      }))
+        })
+      })
       .catch(error => console.log("DB Write Error on Cancel Interview: ", error))
   }
+
+  const setSpots = (id, direction) => {
+    //set value to 0 to 5 to set day
+    const dayId = Math.floor( (id -1) / 5)
+
+    return state.days[dayId].spots = state.days[dayId].spots + direction;
+
+  //  if (id >= 1 && id <=5 )      {return state.days[0].spots = state.days[0].spots + direction;} 
+  //  if (id >= 6 && id <= 10 )    {return state.days[1].spots = state.days[1].spots + direction;} 
+  //  if (id >= 11  && id <= 15)   {return state.days[2].spots = state.days[2].spots + direction;} 
+  //  if (id >= 16  && id <= 20 )  {return state.days[3].spots = state.days[3].spots + direction;} 
+  //  if (id >= 21  && id <= 25 )  {return state.days[4].spots = state.days[4].spots + direction;} 
+  //   console.log("state days: ", state.days)
+    
+  }
+
   return {state, setDay, bookInterview, cancelInterview }
 }

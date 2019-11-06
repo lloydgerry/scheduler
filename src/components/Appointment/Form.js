@@ -21,13 +21,17 @@ export default function Form(props) {
 
   function validate() {
     if (name === "") {
-      setError("Student name cannot be blank");
-      return;
+      setError("Student name cannot be blank.");
+      return
+    } else if (interviewer === null) {
+      setError("Please choose an interviewer.")
+      return
     }
+    
+    console.log("interviewer in validate", interviewer)
     setError("");
     props.onSave(name, interviewer);
   }
-  console.log("setInterviewer: ", setInterviewer)
 
   return (
     <main className="appointment__card appointment__card--create">

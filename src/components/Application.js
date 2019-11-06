@@ -1,124 +1,52 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
 
 import "components/Application.scss";
 import "components/Appointment"
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
-import useVisualMode from "hooks/useVisualMode"
-import getAppointmentsForDay, { getInterviewer, getInterviewersForDay } from "Helpers/selectors"
-import useApplicationData from "hooks/useApplicationData"
-
+import useApplicationData from "hooks/useApplicationData";
+import getAppointmentsForDay, { getInterviewer, getInterviewersForDay } from "Helpers/selectors";
 
 
 // //Master Component
 
 export default function Application(props) {
 
-
+  //import functions from useApplication data and destructure
   const {
     state,
     setDay,
     bookInterview,
-    cancelInterview
+    cancelInterview,
+    setSpots
   } = useApplicationData();
 
+  // Set Constants for Lists
 
-//   const [state, setState] = useState({
-//     day: "Monday",
-//     days: [],
-//     appointments: {},
-//     interviewers: {}
-//   });
+  const appointments =  getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
 
-//   //Collect API Info
-// useEffect(() => {
-//   Promise.all([
-//     axios.get("http://localhost:8001/api/days"),
-//     axios.get("http://localhost:8001/api/appointments"),
-//     axios.get("http://localhost:8001/api/interviewers")
-//   ]).then((all) => {
+  // Schedule
 
-//     setState(prev => ({
-//       ...prev, 
-//       days: all[0].data, 
-//       appointments: all[1].data, 
-//       interviewers: all[2].data
-//     }))
+  const appointmentsList = appointments.map(appointment => {
+    const interview = getInterviewer(state, appointment.interview)
+    return (
+      <Appointment
+      {...appointment}
+      key={appointment.id}
+      id={appointment.id}
+      time={appointment.time}
+      interview={interview}
+      interviewers={interviewers}
+      bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
+      />
+      );
+  });
+  // End Schedule
 
-//     }).catch(error => console.log("API Error: ", error))
-
-//   }, [])
-
-  // Set Constants using API Info and other App Functions
-
-// const setDay = day => setState({ ...state, day });
-const appointments =  getAppointmentsForDay(state, state.day);
-const interviewers = getInterviewersForDay(state, state.day);
-
-//Interview Handlers ==========
-//Book Interview
-// const bookInterview = (id, interview) => {
-//   const appointment = {
-//   ...state.appointments[id],
-//   interview: { ...interview }
-//   };
-//   const appointments = {
-//     ...state.appointments,
-//     [id]: appointment
-//   };
-  
-  
-//   console.log("book interview: ", id, interview);
-//   return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
-//     setState({
-//       ...state,
-//       appointments
-//   }))
-//   .catch(error => console.log("DB Write Error on Book Interview: ", error))
-// }
-// //Cancel Interview
-
-// const cancelInterview =(id) => {
-//   const appointment = {
-//     ...state.appointments[id],
-//     interview: null
-//     };
-//     const appointments = {
-//       ...state.appointments,
-//       [id]: appointment
-//     };
-
-//     console.log("CancelInterview hit, id is: ", id)
-//     return axios.delete(`http://localhost:8001/api/appointments/${id}`, appointment).then(response => 
-//       setState({
-//         ...state,
-//         appointments
-//     }))
-//     .catch(error => console.log("DB Write Error on Cancel Interview: ", error))
-// }
-
-// Schedule
-const appointmentsList = appointments.map(appointment => {
-  const interview = getInterviewer(state, appointment.interview)
-  console.log("made it into appointments list, interviewers: ", interviewers)
-  return (
-    <Appointment
-    {...appointment}
-    key={appointment.id}
-    id={appointment.id}
-    time={appointment.time}
-    interview={interview}
-    interviewers={interviewers}
-    bookInterview={bookInterview}
-    cancelInterview={cancelInterview}
-    />
-    );
-});
-// End Schedule
-
-
+  //React/JSX Start
   return (
     <main className="layout">
       <section className="sidebar">
@@ -141,6 +69,7 @@ const appointmentsList = appointments.map(appointment => {
           alt="Lighthouse Labs"
         />
       </section>
+      {/* Appointments List produced in schedule element */}
       <section className="schedule">
     {appointmentsList}
     <Appointment
